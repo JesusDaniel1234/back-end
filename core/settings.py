@@ -80,14 +80,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://localhost:5173",
-    "exp://192.168.75.118:8081",
-    "http://10.0.2.2:3000",
-    "http://localhost:8081",
-    "http://10.16.14.78"
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = "core.urls"
 
@@ -204,5 +197,3 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
-
-CORS_ALLOW_ALL_ORIGINS = True
