@@ -36,7 +36,7 @@ DEBUG = False
 
 # ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = ["https://web-production-ec79f.up.railway.app"]
+ALLOWED_HOSTS = ["web-production-ec79f.up.railway.app"]
 # Application definition
 
 INSTALLED_APPS = [
