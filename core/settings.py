@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-m)jx6lhy_0tucb&_^1+_t4r%(r!(xwlr)p1gv4!+bbvzrhg_q%"
+# SECRET_KEY = "django-insecure-m)jx6lhy_0tucb&_^1+_t4r%(r!(xwlr)p1gv4!+bbvzrhg_q%"
+SECRET_KEY = os.environ.get("SECRET_KEY", default="django-insecure-m)jx6lhy_0tucb&_^1+_t4r%(r!(xwlr)p1gv4!+bbvzrhg_q%")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = "RENDER" not in os.environ
 
 ALLOWED_HOSTS = ["*"]
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -35,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.messages",
+    "django.contrib.messages", 
     "django.contrib.staticfiles",
     # "drf_yasg",
     "base.apps.BaseConfig",
@@ -76,9 +81,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "exp://192.168.75.118:8081",
     "http://10.0.2.2:3000",
-    "http://localhost:8081"
-    
-   
+    "http://localhost:8081",
+    "http://10.16.14.78"
 ]
 
 ROOT_URLCONF = "core.urls"

@@ -136,3 +136,7 @@ class ListaResultadosGeneralesPorPaciente(APIView):
             resultado.append(datos_paciente)
         
         return Response(resultado, status=status.HTTP_200_OK)
+
+class ServidorActivoView(APIView):
+    def get(self, request):
+        return Response({"message":"OK"}, status=status.HTTP_200_OK)
