@@ -1,8 +1,10 @@
 asgiref==3.7.2
+dj-database-url==2.3.0
 Django==5.0.3
 django-cors-headers==4.3.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
+gunicorn==23.0.0
 inflection==0.5.1
 mysqlclient==2.2.4
 packaging==24.0
@@ -14,5 +16,7 @@ python-dotenv==1.0.1
 pytz==2024.1
 PyYAML==6.0.1
 sqlparse==0.4.4
+typing_extensions==4.12.2
 tzdata==2024.1
 uritemplate==4.1.1
+whitenoise==6.8.2
