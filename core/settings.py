@@ -30,13 +30,10 @@ load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY", default="django-insecure-m)jx6lhy_0tucb&_^1+_t4r%(r!(xwlr)p1gv4!+bbvzrhg_q%")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = bool( os.environ.get('DEBUG', True) )
+DEBUG = bool( os.environ.get('DEBUG', True) )
 
-DEBUG = False
+ALLOWED_HOSTS = ["*"]
 
-# ALLOWED_HOSTS = ["*"]
-
-ALLOWED_HOSTS = ["localhost","web-production-ec79f.up.railway.app"]
 # Application definition
 
 INSTALLED_APPS = [
