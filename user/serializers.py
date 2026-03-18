@@ -1,12 +1,11 @@
 from rest_framework import serializers
-from .models import PerfilUsuario
-from django.contrib.auth.models import User
+from .models import UserProfile
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserProfile
         fields = ["id", "username", "first_name", "last_name", "email", "is_staff"]
 
         extra_kwargs = {
@@ -15,18 +14,15 @@ class UserSerializers(serializers.ModelSerializer):
             }
         }
 
-
-class DetallarListarPerfilSerializers(serializers.ModelSerializer):
-    usuario = UserSerializers()
-    imagen_perfil = serializers.ImageField(required=False)
-
-    class Meta:
-        model = PerfilUsuario
-        fields = ["id", "usuario", "imagen_perfil"]
-
-
-class EliminarActualizarPerfilSerializers(serializers.ModelSerializer):
-    imagen_perfil = serializers.ImageField(required=False)
-    class Meta:
-        model = PerfilUsuario
-        fields = "__all__"
+    def to_representation(self, instance: UserProfile):
+        user = instance.user
+        return {
+            "id": instance.id,
+            "image": instance.image,
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "is_staff": user.is_staff,
+            "is_superuser": user.is_superuser
+        }
