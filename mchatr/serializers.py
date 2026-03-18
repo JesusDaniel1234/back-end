@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import PreguntasMChatR, RespuestaTutorMChatR, RespuestasMchtR
-from user.serializers import DetallarListarPerfilSerializers
+from user.serializers import UserSerializers
 from pacientes.serializers import GestionarDatosPacientesSerializers
 from base.serializers import ClaveSerializers
 
@@ -77,10 +77,11 @@ class EliminarActualizarCrearRespuestaMChatRSerializers(serializers.ModelSeriali
 class DetallarRespuestasMChatRSimpSerializers(serializers.ModelSerializer):
     valoracion = serializers.SerializerMethodField()
     fecha_corta = serializers.SerializerMethodField()
+
     class Meta:
         model = RespuestasMchtR
         fields = ["id", "puntuacion", "fecha_corta", "valoracion"]
-    
+
     def get_valoracion(self, obj):
         return obj.valoracion()
 

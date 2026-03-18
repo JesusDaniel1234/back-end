@@ -6,7 +6,7 @@ from base.serializers import (
     RangoRiesgoSerializers,
 )
 from pacientes.serializers import GestionarDatosPacientesSerializers
-from user.serializers import DetallarListarPerfilSerializers
+from user.serializers import UserSerializers
 
 
 # Preguntas QChat --------------------------------------------------------------------

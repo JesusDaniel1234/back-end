@@ -8,7 +8,7 @@ from .models import (
     ValorRiesgo,
     RangoRiesgo,
 )
-from user.models import PerfilUsuario
+from user.models import UserProfile
 from .serializers import (
     # Q-chat-100
     TipoRiesgoSerializers,
@@ -41,7 +41,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        perfil = PerfilUsuario.objects.get(usuario=user)
+        perfil = UserProfile.objects.get(usuario=user)
         # Add custom claims
         token["username"] = user.username
         token["email"] = user.email

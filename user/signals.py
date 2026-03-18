@@ -9,7 +9,7 @@ def create_admin_user(sender, **kwargs):
     if not User.objects.filter(username="admin").exists():
         User.objects.create_superuser(username="admin", password="admin1234")
     if not UserProfile.objects.filter(
-        usuario=User.objects.get(username="admin")
+        user=User.objects.get(username="admin")
     ).exists():
-        usuario = User.objects.get(username="admin")
-        UserProfile.objects.create(usuario=usuario)
+        user = User.objects.get(username="admin")
+        UserProfile.objects.create(user=user)

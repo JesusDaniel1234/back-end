@@ -25,17 +25,19 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+api_version = "api/v1/"
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/", include("base.urls", namespace="api")),
+    path(f"{api_version}token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path(f"{api_version}token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(f"{api_version}", include("base.urls", namespace="api")),
     # Tests
-    path("api/mchatr/", include("mchatr.urls", namespace="mchatr")),
-    path("api/qchat/", include("qchat.urls", namespace="qchat")),
-    path("api/qchat10/", include("qchat10.urls", namespace="qchat10")),
-    path("api/usuarios/", include("user.urls", namespace="usuarios")),
-    path("api/pacientes/", include("pacientes.urls", namespace="pacientes")),
+    path(f"{api_version}mchatr/", include("mchatr.urls", namespace="mchatr")),
+    path(f"{api_version}qchat/", include("qchat.urls", namespace="qchat")),
+    path(f"{api_version}qchat10/", include("qchat10.urls", namespace="qchat10")),
+    path(f"{api_version}", include("user.urls", namespace="usuarios")),
+    path(f"{api_version}pacientes/", include("pacientes.urls", namespace="pacientes")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

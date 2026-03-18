@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "qchat10.apps.Qchat10Config",
     "user.apps.UserConfig",
     "pacientes.apps.PacientesConfig",
+
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",

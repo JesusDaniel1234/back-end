@@ -1,7 +1,7 @@
 from django.db import models
 from base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo, ClaveConjunto
 from pacientes.models import DatosPaciente
-from user.models import PerfilUsuario
+from user.models import UserProfile
 
 
 # Create your models here.
@@ -15,7 +15,7 @@ class PreguntaQchat(models.Model):
     )
     rango_riesgo = models.ForeignKey(RangoRiesgo, on_delete=models.CASCADE)
     creado_por = models.ForeignKey(
-        PerfilUsuario, on_delete=models.CASCADE, blank=True, null=True
+        UserProfile, on_delete=models.CASCADE, blank=True, null=True
     )
     activa = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)

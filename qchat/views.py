@@ -8,7 +8,7 @@ from rest_framework.generics import (
     UpdateAPIView,
     DestroyAPIView,
 )
-from .models import PreguntaQchat, RespuestaTutorQChat, RespuestasQChat, PerfilUsuario
+from .models import PreguntaQchat, RespuestaTutorQChat, RespuestasQChat, UserProfile
 from base.models import TipoRiesgo, ValorRiesgo, ClaveConjunto
 from base.generador_codigo import generar_codigo
 from .serializers import (
