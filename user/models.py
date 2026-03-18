@@ -15,9 +15,8 @@ class UserProfile(models.Model):
         Modelo de usuario basado en el usuario por defecto de Django
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(
-        default="user_defoult.PNG", upload_to=dir_image_user
-    )
+    phone_number = models.CharField("Número de Teléfono", max_length=8, blank=True, null=True)
+    image = models.ImageField(default="user_defoult.PNG", upload_to=dir_image_user, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
