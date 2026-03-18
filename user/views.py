@@ -1,54 +1,37 @@
-from django.shortcuts import render
-from rest_framework.generics import (
-    ListAPIView,
-    RetrieveAPIView,
-    CreateAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
-)
-from .models import PerfilUsuario
-from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import (
-    EliminarActualizarPerfilSerializers,
-    DetallarListarPerfilSerializers,
-    UserSerializers,
-)
-from rest_framework.views import APIView
+from rest_framework.decorators import action
+from .models import UserProfile
+from .serializers import UserSerializers
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # Create your views here.
-class ListarPerfilView(ListAPIView):
-    queryset = PerfilUsuario.objects.all()
-    serializer_class = DetallarListarPerfilSerializers
+class UsersViewSet(ModelViewSet):
 
+    """
+        Clase para la gestión de usuarios
+    """
 
-class DetallarPerfilView(RetrieveAPIView):
-    queryset = PerfilUsuario.objects.all()
-    serializer_class = DetallarListarPerfilSerializers
-    
-
-class CrearActualizarEliminarPerfilView(CreateAPIView, UpdateAPIView, DestroyAPIView):
-    queryset = PerfilUsuario.objects.all()
-    serializer_class = EliminarActualizarPerfilSerializers
-
-
-class CrearActualizarEliminarUserView(CreateAPIView, UpdateAPIView, DestroyAPIView):
-    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated, ]
+    queryset = UserProfile.objects.all()
     serializer_class = UserSerializers
 
+    def create(self, request, *args, **kwargs):
 
-class LogoutView(APIView):
-    permission_classes = (IsAuthenticated,)
-    def post(self, request):
+        serializers = self.get_serializer(data=request.data)
+        serializers.is_valid()
+        serializers.save(raise_exception=True)
+        return Response({ "message": "Usuario creado correctamente" }, status=status.HTTP_201_CREATED)
+
+    @action(methods=["post"], detail="false")
+    def logout(self, request):
         try:
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({"message": "Sesión Cerrada Correctamente"},status=status.HTTP_200_OK)
+            return Response({ "message": "Sesión Cerrada Correctamente" }, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"message": e}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({ "message": e }, status=status.HTTP_400_BAD_REQUEST)
