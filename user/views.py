@@ -4,7 +4,7 @@ from .serializers import UserSerializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -17,6 +17,16 @@ class UsersViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     queryset = UserProfile.objects.all()
     serializer_class = UserSerializers
+
+    def get_permissions(self):
+
+        permissions = {
+            "create": [IsAuthenticated(), IsAdminUser()],
+            "destroy": [IsAuthenticated(), IsAdminUser()],
+            "list": [IsAuthenticated()],
+        }
+
+        return permissions.get(self.action, super().get_permissions())
 
     def create(self, request, *args, **kwargs):
 
