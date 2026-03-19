@@ -10,7 +10,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 class UsersViewSet(ModelViewSet):
-
     """
         Clase para la gestión de usuarios
     """
@@ -24,7 +23,8 @@ class UsersViewSet(ModelViewSet):
         serializers = self.get_serializer(data=request.data)
         serializers.is_valid(raise_exception=True)
         serializers.save()
-        return Response({ "message": "Usuario creado correctamente" }, status=status.HTTP_201_CREATED)
+        return Response({ "message": "Usuario creado correctamente", "user": serializers.data },
+                        status=status.HTTP_201_CREATED)
 
     @action(methods=["post"], detail="false")
     def logout(self, request):
