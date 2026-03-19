@@ -22,8 +22,8 @@ class UsersViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
 
         serializers = self.get_serializer(data=request.data)
-        serializers.is_valid()
-        serializers.save(raise_exception=True)
+        serializers.is_valid(raise_exception=True)
+        serializers.save()
         return Response({ "message": "Usuario creado correctamente" }, status=status.HTTP_201_CREATED)
 
     @action(methods=["post"], detail="false")
