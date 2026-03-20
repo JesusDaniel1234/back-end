@@ -1,13 +1,11 @@
-from django.urls import path, include
-from .views import DetallesDatosPacienteView, DetallesPacienteYRespuestasView
+from .views import PatientDataViewSet
 from rest_framework.routers import DefaultRouter
 
 app_name = "pacientes"
 
 router = DefaultRouter()
-router.register(r"detalles_pacientes", DetallesDatosPacienteView)
+router.register(r"patient", PatientDataViewSet)
 
-urlpatterns = [
-    path("", include(router.urls)),
-    path("detalles_simp/<int:pk>", DetallesPacienteYRespuestasView.as_view(), name="DetallesSimp"),
-]
+urlpatterns =  router.urls
+
+

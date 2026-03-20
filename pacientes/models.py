@@ -2,11 +2,11 @@ from django.db import models
 
 
 # Create your models here.
-class DatosPaciente(models.Model):
-    nombre_paciente = models.CharField(max_length=100)
-    tarjeta_menor = models.CharField(max_length=11, unique=True,  null=False)
-    edad_paciente_meses = models.PositiveIntegerField()
-    nombre_tutor = models.CharField(max_length=100)
+class PatientData(models.Model):
+    patient_name = models.CharField(max_length=100)
+    CI = models.CharField(max_length=11, unique=True,  null=False)
+    age_in_month = models.PositiveIntegerField()
+    tutor_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.nombre_paciente + " " + self.tarjeta_menor
+        return self.patient_name + " " + self.CI
