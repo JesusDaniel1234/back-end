@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import PreguntasMChatR, RespuestasMchtR, RespuestaTutorMChatR
+from .models import MchatRQuestions, MChatRResponses
 
 # Register your models here.
-admin.site.register(PreguntasMChatR)
-admin.site.register(RespuestasMchtR)
-admin.site.register(RespuestaTutorMChatR)
+admin.site.register(MchatRQuestions)
+admin.site.register(MChatRResponses)
