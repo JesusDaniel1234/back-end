@@ -15,7 +15,7 @@ from .serializers import (
     ValorRiesgoSerializers,
     RangoRiesgoSerializers,
 )
-from pacientes.models import DatosPaciente
+from pacientes.models import PatientData
 from django.db.models import Avg, Sum, Count
 from rest_framework.response import Response
 from rest_framework import status
@@ -118,7 +118,7 @@ def calcularRiesgo(paciente):
 
 class ListaResultadosGeneralesPorPaciente(APIView):
     def get(self, request):
-        pacientes = DatosPaciente.objects.all()
+        pacientes = PatientData.objects.all()
         # Crear una lista para almacenar los resultados
         resultado = []
 
