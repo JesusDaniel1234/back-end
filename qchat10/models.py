@@ -1,7 +1,7 @@
 from django.db import models
 from base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo, ClaveConjunto
 from user.models import UserProfile
-from pacientes.models import DatosPaciente
+from pacientes.models import PatientData
 
 # Create your models here.
 class PreguntasQChat10(models.Model):
@@ -40,7 +40,7 @@ class RespuestasQChat10(models.Model):
     puntuacion = models.PositiveIntegerField()
     respuestas = models.ManyToManyField(RespuestaTutorQChat10)
     datos_personales = models.ForeignKey(
-        DatosPaciente,
+        PatientData,
         on_delete=models.CASCADE,
         verbose_name="datos_personales",
         default=1,

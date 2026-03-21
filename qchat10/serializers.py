@@ -5,7 +5,7 @@ from base.serializers import (
     ValorRiesgoSerializers,
     RangoRiesgoSerializers,
 )
-from pacientes.serializers import GestionarDatosPacientesSerializers
+from pacientes.serializers import PatientDataSerializers
 from user.serializers import UserSerializers
 
 
@@ -69,7 +69,7 @@ class DetallarListarRespuestasQChat10Serializers(serializers.ModelSerializer):
 
     fecha_corta = serializers.SerializerMethodField()
     respuestas = DetallarListarRespuestasTutorQChat10Serializers(many=True)
-    datos_personales = GestionarDatosPacientesSerializers()
+    datos_personales = PatientDataSerializers()
 
     class Meta:
         model = RespuestasQChat10

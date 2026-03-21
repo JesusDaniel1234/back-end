@@ -19,7 +19,7 @@ from .serializers import (
     DetallarListarRespuestasQChatSerializers,
     EliminarActualizarCrearRespuestasQChatSerializers,
 )
-from pacientes.models import DatosPaciente
+from pacientes.models import PatientData
 
 # Create your views here.
 
@@ -128,7 +128,7 @@ class CrearActualizarEliminarRespuestasQChatView(
     serializer_class = EliminarActualizarCrearRespuestasQChatSerializers
 
     def create(self, request, *args, **kwargs):
-        respuesta = DatosPaciente.objects.get(id=request.data["datos_personales"])
+        respuesta = PatientData.objects.get(id=request.data["datos_personales"])
         if hasattr(respuesta, 'respuestasqchat_set'):
             respuesta.respuestasqchat_set.all().delete()
         
