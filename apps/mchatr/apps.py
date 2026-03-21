@@ -3,6 +3,6 @@ from django.apps import AppConfig
 
 class MchatrConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "mchatr"
+    name = "apps.mchatr"
     def ready(self) -> None:
-        import mchatr.signals
+        import apps.mchatr.signals

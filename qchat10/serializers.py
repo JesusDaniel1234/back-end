@@ -5,8 +5,7 @@ from base.serializers import (
     ValorRiesgoSerializers,
     RangoRiesgoSerializers,
 )
-from pacientes.serializers import PatientDataSerializers
-from user.serializers import UserSerializers
+from apps.patient.serializers import PatientDataSerializers
 
 
 class DetallarListarPreguntasQChat10Serializers(serializers.ModelSerializer):

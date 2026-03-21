@@ -1,6 +1,6 @@
 from django.db import models
-from user.models import UserProfile
-from pacientes.models import PatientData
+from apps.user.models import UserProfile
+from apps.patient.models import PatientData
 
 # Create your models here.
 RISK_VALUES = (("SI", "SI"), ("NO", "NO"))

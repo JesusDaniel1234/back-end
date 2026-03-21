@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
-from pacientes.models import PatientData
+from apps.patient.models import PatientData
 from .models import MChatRResponses, MchatRQuestions
-from user.serializers import UserSerializers
 
 
 # Preguntas M-Chat-R
@@ -39,12 +38,13 @@ class MChatRResponsesSerializers(serializers.ModelSerializer):
         }
 
     def validate_responses(self, value):
-        question = MchatRQuestions.objects.filter(is_activa=True).count()
-        if question != len(value):
+        active_question = MchatRQuestions.objects.filter(is_activa=True).count()
+        if active_question != len(value):
             raise serializers.ValidationError(
                 "La cantidad de respuestas no coincide con la cantidad de preguntas activas")
 
         for response in value:
+            question = MchatRQuestions.objects.get(id=response["id"])
             if response["content"] != question.content:
                 raise serializers.ValidationError("Las preguntas no coinciden")
 

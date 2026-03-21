@@ -1,7 +1,7 @@
 from tests.test_setup import TestSetUp
 from rest_framework import status
 
-from user.models import UserProfile
+from apps.user.models import UserProfile
 
 
 # Create your tests here.

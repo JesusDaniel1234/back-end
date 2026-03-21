@@ -16,11 +16,12 @@ urlpatterns = [
     path(f"{api_version}token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path(f"{api_version}", include("base.urls", namespace="api")),
     # Tests
-    path(f"{api_version}mchatr/", include("mchatr.urls", namespace="mchatr")),
     path(f"{api_version}qchat/", include("qchat.urls", namespace="qchat")),
     path(f"{api_version}qchat10/", include("qchat10.urls", namespace="qchat10")),
-    path(f"{api_version}", include("user.urls", namespace="usuarios")),
-    path(f"{api_version}pacientes/", include("pacientes.urls", namespace="pacientes")),
+    path(f"{api_version}mchatr/", include("apps.mchatr.urls", namespace="mchatr")),
+    # Users
+    path(f"{api_version}", include("apps.user.urls", namespace="usuarios")),
+    path(f"{api_version}patient/", include("apps.patient.urls", namespace="patient")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

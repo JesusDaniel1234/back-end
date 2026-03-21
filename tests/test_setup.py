@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 
 class TestSetUp(APITestCase):
     def setUp(self):
-        from user.models import UserProfile
+        from apps.user.models import UserProfile
 
         self.login_url = "/api/v1/token/"
         self.user = UserProfile.objects.create_superuser(

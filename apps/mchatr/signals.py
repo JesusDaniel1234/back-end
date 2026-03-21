@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 @receiver(post_migrate)
 def create_questions_mchatr(sender, **kwargs):
-    if sender.name == "mchatr":
+    if sender.name == "apps.mchatr":
         if not MchatRQuestions.objects.exists():
             preguntas = [
                 {

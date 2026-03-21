@@ -8,7 +8,7 @@ from rest_framework.generics import (
     UpdateAPIView,
     DestroyAPIView,
 )
-from .models import PreguntaQchat, RespuestaTutorQChat, RespuestasQChat, UserProfile
+from .models import PreguntaQchat, RespuestaTutorQChat, RespuestasQChat
 from base.models import TipoRiesgo, ValorRiesgo, ClaveConjunto
 from base.generador_codigo import generar_codigo
 from .serializers import (
@@ -19,7 +19,7 @@ from .serializers import (
     DetallarListarRespuestasQChatSerializers,
     EliminarActualizarCrearRespuestasQChatSerializers,
 )
-from pacientes.models import PatientData
+from apps.patient.models import PatientData
 
 # Create your views here.
 

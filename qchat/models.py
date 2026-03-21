@@ -1,7 +1,7 @@
 from django.db import models
 from base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo, ClaveConjunto
-from pacientes.models import PatientData
-from user.models import UserProfile
+from apps.patient.models import PatientData
+from apps.user.models import UserProfile
 
 
 # Create your models here.

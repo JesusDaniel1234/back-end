@@ -1,5 +1,5 @@
-from mchatr.models import MChatRResponses, MchatRQuestions
-from pacientes.models import PatientData
+from apps.mchatr.models import MchatRQuestions
+from apps.patient.models import PatientData
 from tests.test_setup import TestSetUp
 
 

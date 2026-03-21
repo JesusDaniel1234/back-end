@@ -8,15 +8,15 @@ from .models import (
     ValorRiesgo,
     RangoRiesgo,
 )
-from user.models import UserProfile
+from apps.user.models import UserProfile
 from .serializers import (
     # Q-chat-100
     TipoRiesgoSerializers,
     ValorRiesgoSerializers,
     RangoRiesgoSerializers,
 )
-from pacientes.models import PatientData
-from django.db.models import Avg, Sum, Count
+from apps.patient.models import PatientData
+from django.db.models import Sum, Count
 from rest_framework.response import Response
 from rest_framework import status
 
