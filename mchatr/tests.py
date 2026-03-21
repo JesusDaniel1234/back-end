@@ -1,4 +1,5 @@
 from mchatr.models import MChatRResponses, MchatRQuestions
+from pacientes.models import PatientData
 from tests.test_setup import TestSetUp
 
 
@@ -49,4 +50,84 @@ class TestMchatRQuestions(TestSetUp):
 
 
 class TestMChatRResponses(TestSetUp):
-    pass
+    URL = "http://localhost:8000/api/v1/mchatr/mchat_responses/"
+
+    def _patient(self):
+        return PatientData.objects.create(
+            patient_name="paciente de prueba",
+            CI="01062279905",
+            age_in_month=24,
+            tutor_name="tutor de prueba",
+        )
+
+    def _default_responses(self):
+        from tests.data.mchat_questions import data_response
+        return data_response
+
+    def _responses_with_reverse_response(self):
+        import copy
+        from tests.data.mchat_questions import data_response
+        data = copy.deepcopy(data_response)
+        for i in data:
+            question = MchatRQuestions.objects.get(id=i["id"])
+            i["response"] = "NO" if question.response == "SI" else "SI"
+
+        return data
+
+    def test_high_risk_case(self):
+        """
+            Prueba de Integración
+            - con la función __responses_with_reverse_response, todas las respuestas están en estado
+            de riesgo.
+            - con esto la puntuación obtenida debe ser la máxima
+        """
+        patient = self._patient()
+        data = {
+            "patient_name": patient.patient_name,
+            "CI": patient.CI,
+            "age_in_month": patient.age_in_month,
+            "tutor_name": patient.tutor_name,
+            "responses": self._responses_with_reverse_response()
+        }
+
+        response = self.client.post(self.URL, data, format="json")
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["puntuation"], 20)
+        self.assertEqual(response.data["valoration"], "AR")
+
+    def test_low_risk_case(self):
+        """
+            Prueba de Integración
+            - con la función _default_responses, todas las respuestas presentan el mismo estado.
+            - con esto la puntuación obtenida debe ser 0
+        """
+        patient = self._patient()
+        data = {
+            "patient_name": patient.patient_name,
+            "CI": patient.CI,
+            "age_in_month": patient.age_in_month,
+            "tutor_name": patient.tutor_name,
+            "responses": self._default_responses()
+        }
+
+        response = self.client.post(self.URL, data, format="json")
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["puntuation"], 0)
+        self.assertEqual(response.data["valoration"], "BR")
+
+    def test_validate_response_number(self):
+        patient = self._patient()
+        data = {
+            "patient_name": patient.patient_name,
+            "CI": patient.CI,
+            "age_in_month": patient.age_in_month,
+            "tutor_name": patient.tutor_name,
+            "responses": self._default_responses()[:10]
+        }
+
+        response = self.client.post(self.URL, data, format="json")
+
+        # Error 400 La cantidad de respuestas no coincide con la cantidad de preguntas activas
+        self.assertEqual(response.status_code, 400)
