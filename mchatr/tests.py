@@ -1,9 +1,18 @@
+from mchatr.models import MChatRResponses, MchatRQuestions
 from tests.test_setup import TestSetUp
 
 
 # Create your tests here.
 class TestMchatRQuestions(TestSetUp):
     URL = "http://localhost:8000/api/v1/mchatr/mchat_questions/"
+
+    def _question(self):
+        return MchatRQuestions.objects.create(
+            content="Nueva pregunta",
+            response="NO",
+            created_by=self.user,
+            is_activa=True
+        )
 
     def test_list_questions_by_url(self):
         response = self.client.get(self.URL)
@@ -20,23 +29,21 @@ class TestMchatRQuestions(TestSetUp):
 
     def test_updated_question_by_url(self):
         # Crear pregunta:
-        data = { "content": "nueva preguta", "response": "NO", "created_by": self.user.id, "is_activa": True }
-        created = self.client.post(self.URL, data, frmat="json")
+        created = self._question()
 
         # Actualizar pregunta
         update_data = { "is_activa": False, "content": "pregunta actualizada", "response": "SI" }
-        response = self.client.patch(f"{self.URL}{created.data["id"]}/", update_data, frmat="json")
+        response = self.client.patch(f"{self.URL}{created.id}/", update_data, frmat="json")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["content"], update_data["content"])
 
     def test_delete_question_by_url(self):
         # Crear pregunta:
-        data = { "content": "nueva preguta", "response": "NO", "created_by": self.user.id, "is_activa": True }
-        created = self.client.post(self.URL, data, frmat="json")
+        created = self._question()
 
         # Eliminar Pregunta
-        response = self.client.delete(f"{self.URL}{created.data["id"]}/")
+        response = self.client.delete(f"{self.URL}{created.id}/")
 
         self.assertEqual(response.status_code, 204)
 
