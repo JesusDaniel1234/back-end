@@ -12,7 +12,7 @@ class PatientDataViewSet(ModelViewSet):
     serializer_class = PatientDataSerializers
 
     def create(self, request, *args, **kwargs):
-        ci = request.data.get("ci")
+        ci = request.data.get("CI")
         if PatientData.objects.filter(ci=ci).exists():
             patient = PatientData.objects.get(ci=ci)
             serializer = self.serializer_class(patient)
