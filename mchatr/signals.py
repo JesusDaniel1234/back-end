@@ -92,7 +92,7 @@ def create_questions_mchatr(sender, **kwargs):
             ]
             for pregunta in preguntas:
                 MchatRQuestions.objects.create(content=pregunta["content"], response=pregunta["response"])
-            print("Test M-Chat-R creado correctamente.")
+            print("Preguntas de M-Chat-R creado correctamente.")
 
 # @receiver(pre_delete, sender=MChatRResponses)
 # def delete_responses(sender, instance, **kwargs):

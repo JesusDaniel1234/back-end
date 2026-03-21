@@ -138,17 +138,19 @@ def crear_preguntas_qchat(sender, **kwargs):
             for pregunta in preguntas:
                 tipo_riesgo = TipoRiesgo.objects.get(nombre=pregunta["tipo_riesgo"])
                 rango_riesgo = RangoRiesgo.objects.get(rango=pregunta["rango_riesgo"], tipo_riesgo=tipo_riesgo)
-                print(rango_riesgo)
                 PreguntaQchat.objects.create(
                     contenido=pregunta["contenido"],
                     tipo_riesgo=tipo_riesgo,
                     rango_riesgo=rango_riesgo,
                 )
-@receiver(pre_delete, sender=RespuestasQChat)
-def eliminar_respuestas(sender, instance, **kwargs):
-    respuestas = instance.respuestas.all()
-    print(f"Eliminando respuestas asociadas con {respuestas}")
-    for respuesta in respuestas:
-        if RespuestasQChat.objects.filter(respuestas=respuesta).count() == 1:
-            print(f"Eliminando respuesta {respuesta}")
-            respuesta.delete()
+
+            print("Preguntas de Q-Chat creado correctamente.")
+
+# @receiver(pre_delete, sender=RespuestasQChat)
+# def eliminar_respuestas(sender, instance, **kwargs):
+#     respuestas = instance.respuestas.all()
+#     print(f"Eliminando respuestas asociadas con {respuestas}")
+#     for respuesta in respuestas:
+#         if RespuestasQChat.objects.filter(respuestas=respuesta).count() == 1:
+#             print(f"Eliminando respuesta {respuesta}")
+#             respuesta.delete()
