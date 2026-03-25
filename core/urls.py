@@ -31,9 +31,9 @@ urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
     # Swagger
-    path('swagger.<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path(f'{api_version}swagger.<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path(f'{api_version}swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path(f'{api_version}redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # Base Configuration (Token and base app)
     path(f"{api_version}token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path(f"{api_version}token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

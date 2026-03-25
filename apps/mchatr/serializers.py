@@ -51,10 +51,11 @@ class MChatRResponsesSerializers(serializers.ModelSerializer):
         return value
 
     def _calculate_points(self, responses):
+        # Se cuenta si la respuesta coincide con la respuesta de riesgo de cada pregunta
         puntuation = 0
         for response in responses:
             question = MchatRQuestions.objects.get(id=response["id"])
-            if str(question.response) != str(response["response"]):
+            if str(question.response) == str(response["response"]):
                 puntuation += 1
 
         return puntuation

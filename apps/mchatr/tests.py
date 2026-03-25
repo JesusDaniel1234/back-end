@@ -71,7 +71,6 @@ class TestMChatRResponses(TestSetUp):
         for i in data:
             question = MchatRQuestions.objects.get(id=i["id"])
             i["response"] = "NO" if question.response == "SI" else "SI"
-
         return data
 
     def test_high_risk_case(self):
@@ -87,7 +86,7 @@ class TestMChatRResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._responses_with_reverse_response()
+            "responses": self._default_responses()
         }
 
         response = self.client.post(self.URL, data, format="json")
@@ -108,7 +107,7 @@ class TestMChatRResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._default_responses()
+            "responses": self._responses_with_reverse_response()
         }
 
         response = self.client.post(self.URL, data, format="json")
@@ -124,7 +123,7 @@ class TestMChatRResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._default_responses()[:10]
+            "responses": self._responses_with_reverse_response()[:10]
         }
 
         response = self.client.post(self.URL, data, format="json")
