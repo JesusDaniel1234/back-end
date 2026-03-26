@@ -1,5 +1,5 @@
 from django.db.models.signals import post_migrate, pre_delete
-from .models import PreguntaQchat, RespuestasQChat
+from .models import QchatQuestion, QchatResponses
 from base.models import RangoRiesgo, TipoRiesgo
 from django.dispatch import receiver
 
@@ -7,7 +7,7 @@ from django.dispatch import receiver
 @receiver(post_migrate)
 def crear_preguntas_qchat(sender, **kwargs):
     if sender.name == "qchat":
-        if not PreguntaQchat.objects.exists():
+        if not QchatQuestion.objects.exists():
             preguntas = [
                 {
                     "contenido": "¿Su hijo lo mira a usted cuando lo llama por su nombre?",
@@ -138,7 +138,7 @@ def crear_preguntas_qchat(sender, **kwargs):
             for pregunta in preguntas:
                 tipo_riesgo = TipoRiesgo.objects.get(nombre=pregunta["tipo_riesgo"])
                 rango_riesgo = RangoRiesgo.objects.get(rango=pregunta["rango_riesgo"], tipo_riesgo=tipo_riesgo)
-                PreguntaQchat.objects.create(
+                QchatQuestion.objects.create(
                     contenido=pregunta["contenido"],
                     tipo_riesgo=tipo_riesgo,
                     rango_riesgo=rango_riesgo,
@@ -146,11 +146,3 @@ def crear_preguntas_qchat(sender, **kwargs):
 
             print("Preguntas de Q-Chat creado correctamente.")
 
-# @receiver(pre_delete, sender=RespuestasQChat)
-# def eliminar_respuestas(sender, instance, **kwargs):
-#     respuestas = instance.respuestas.all()
-#     print(f"Eliminando respuestas asociadas con {respuestas}")
-#     for respuesta in respuestas:
-#         if RespuestasQChat.objects.filter(respuestas=respuesta).count() == 1:
-#             print(f"Eliminando respuesta {respuesta}")
-#             respuesta.delete()
