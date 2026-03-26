@@ -41,7 +41,7 @@ LOCAL_APPS = [
     "apps.user",
     "apps.patient",
 
-    "qchat",
+    "apps.qchat",
     "qchat10",
 ]
 
