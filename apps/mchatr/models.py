@@ -7,12 +7,13 @@ RISK_VALUES = (("SI", "SI"), ("NO", "NO"))
 
 class MchatRQuestions(models.Model):
     content = models.TextField("Contenido de la pregunta", max_length=500)
-    response = models.CharField("Respuesta", max_length=2, choices=RISK_VALUES)
     created_by = models.ForeignKey(UserProfile, verbose_name="Usuario que creó la pregunya", on_delete=models.CASCADE,
                                    blank=True, null=True)
     is_activa = models.BooleanField("Está activa", default=True)
     created = models.DateTimeField("Creada", auto_now_add=True)
     updated = models.DateTimeField("Actualizada", auto_now=True)
+
+    response = models.CharField("Respuesta", max_length=2, choices=RISK_VALUES)
 
     def __str__(self):
         return self.content[:50]
