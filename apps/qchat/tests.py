@@ -126,38 +126,38 @@ class TestMChatRResponses(TestSetUp):
         self.assertEqual(response.data["puntuation"], 100)
         self.assertEqual(response.data["valoration"], "AR")
 
-    # def test_low_risk_case(self):
-    #     """
-    #         Prueba de Integración
-    #         - con la función _default_responses, todas las respuestas presentan el mismo estado.
-    #         - con esto la puntuación obtenida debe ser 0
-    #     """
-    #     patient = self._patient()
-    #     data = {
-    #         "patient_name": patient.patient_name,
-    #         "CI": patient.CI,
-    #         "age_in_month": patient.age_in_month,
-    #         "tutor_name": patient.tutor_name,
-    #         "responses": self._responses_with_reverse_response()
-    #     }
-    #
-    #     response = self.client.post(self.URL, data, format="json")
-    #
-    #     self.assertEqual(response.status_code, 201)
-    #     self.assertEqual(response.data["puntuation"], 0)
-    #     self.assertEqual(response.data["valoration"], "BR")
-    #
-    # def test_validate_response_number(self):
-    #     patient = self._patient()
-    #     data = {
-    #         "patient_name": patient.patient_name,
-    #         "CI": patient.CI,
-    #         "age_in_month": patient.age_in_month,
-    #         "tutor_name": patient.tutor_name,
-    #         "responses": self._responses_with_reverse_response()[:10]
-    #     }
-    #
-    #     response = self.client.post(self.URL, data, format="json")
-    #
-    #     # Error 400 La cantidad de respuestas no coincide con la cantidad de preguntas activas
-    #     self.assertEqual(response.status_code, 400)
+    def test_low_risk_case(self):
+        """
+            Prueba de Integración
+            - con la función _default_responses, todas las respuestas presentan el mismo estado.
+            - con esto la puntuación obtenida debe ser 0
+        """
+        patient = self._patient()
+        data = {
+            "patient_name": patient.patient_name,
+            "CI": patient.CI,
+            "age_in_month": patient.age_in_month,
+            "tutor_name": patient.tutor_name,
+            "responses": self._responses_with_low_risk()
+        }
+
+        response = self.client.post(self.URL, data, format="json")
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["puntuation"], 0)
+        self.assertEqual(response.data["valoration"], "BR")
+
+    def test_validate_response_number(self):
+        patient = self._patient()
+        data = {
+            "patient_name": patient.patient_name,
+            "CI": patient.CI,
+            "age_in_month": patient.age_in_month,
+            "tutor_name": patient.tutor_name,
+            "responses": self._responses_with_high_risk()[:10]
+        }
+
+        response = self.client.post(self.URL, data, format="json")
+
+        # Error 400 La cantidad de respuestas no coincide con la cantidad de preguntas activas
+        self.assertEqual(response.status_code, 400)
