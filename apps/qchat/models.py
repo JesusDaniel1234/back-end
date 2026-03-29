@@ -1,5 +1,5 @@
 from django.db import models
-from base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo, ClaveConjunto
+from base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo
 from apps.patient.models import PatientData
 from apps.user.models import UserProfile
 
@@ -12,23 +12,24 @@ class QchatQuestion(models.Model):
     is_active = models.BooleanField(default=True)
     updated = models.DateTimeField(auto_now=True)
 
-    risk_tipe = models.ForeignKey(TipoRiesgo, on_delete=models.CASCADE)
+    risk_type = models.ForeignKey(TipoRiesgo, on_delete=models.CASCADE)
+
+    # FIXME: Ver si {response} es importante realmente
     response = models.ForeignKey(ValorRiesgo, on_delete=models.CASCADE, blank=True, null=True)
     risk_range = models.ForeignKey(RangoRiesgo, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return self.content
+        return self.content[:50]
 
-    def obtener_valores_riesgo(self):
-        values = ValorRiesgo.objects.filter(tipo_riesgo=self.tipo_riesgo).order_by(
-            "-orden"
-        )
+    @property
+    def risk_values(self):
+        values = ValorRiesgo.objects.filter(tipo_riesgo=self.risk_type).order_by("-orden")
         return values
 
 
 class QchatResponses(models.Model):
-    puntuation = models.PositiveIntegerField()
+    puntuation = models.PositiveIntegerField("Puntuación")
     responses = models.JSONField("Respuestas")
     patient = models.ForeignKey(
         PatientData,

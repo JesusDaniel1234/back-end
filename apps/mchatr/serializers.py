@@ -25,7 +25,6 @@ class MChatRResponsesSerializers(serializers.ModelSerializer):
     def to_representation(self, instance: MChatRResponses):
         return {
             "id": instance.pk,
-
             "puntuation": instance.puntuation,
             "valoration": instance.valoration,
             "patient": {
@@ -38,7 +37,7 @@ class MChatRResponsesSerializers(serializers.ModelSerializer):
         }
 
     def validate_responses(self, value):
-        active_question = MchatRQuestions.objects.filter(is_activa=True).count()
+        active_question = MchatRQuestions.objects.filter(is_active=True).count()
         if active_question != len(value):
             raise serializers.ValidationError(
                 "La cantidad de respuestas no coincide con la cantidad de preguntas activas")

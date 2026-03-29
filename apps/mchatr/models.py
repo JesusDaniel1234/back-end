@@ -9,7 +9,7 @@ class MchatRQuestions(models.Model):
     content = models.TextField("Contenido de la pregunta", max_length=500)
     created_by = models.ForeignKey(UserProfile, verbose_name="Usuario que creó la pregunya", on_delete=models.CASCADE,
                                    blank=True, null=True)
-    is_activa = models.BooleanField("Está activa", default=True)
+    is_active = models.BooleanField("Está activa", default=True)
     created = models.DateTimeField("Creada", auto_now_add=True)
     updated = models.DateTimeField("Actualizada", auto_now=True)
 

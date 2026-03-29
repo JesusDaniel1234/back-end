@@ -28,8 +28,8 @@ class MChatRResponsesViewSet(viewsets.ModelViewSet):
         return []
 
 
-def create(self, request, *args, **kwargs):
-    serializers = self.get_serializer(data=request.data)
-    serializers.is_valid(raise_exception=True)
-    serializers.save()
-    return Response(serializers.data, status=status.HTTP_201_CREATED)
+    def create(self, request, *args, **kwargs):
+        serializers = self.get_serializer(data=request.data)
+        serializers.is_valid(raise_exception=True)
+        serializers.save()
+        return Response(serializers.data, status=status.HTTP_201_CREATED)
