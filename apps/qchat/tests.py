@@ -1,6 +1,6 @@
 from apps.qchat.models import QchatQuestion
 from apps.patient.models import PatientData
-from base.models import TipoRiesgo, RangoRiesgo, ValorRiesgo
+from apps.base.models import TipoRiesgo, RangoRiesgo, ValorRiesgo
 from tests.test_setup import TestSetUp
 
 

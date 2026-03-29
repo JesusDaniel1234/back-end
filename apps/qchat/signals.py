@@ -1,6 +1,6 @@
 from django.db.models.signals import post_migrate
-from .models import QchatQuestion, QchatResponses
-from base.models import RangoRiesgo, TipoRiesgo
+from .models import QchatQuestion
+from apps.base.models import RangoRiesgo, TipoRiesgo
 from django.dispatch import receiver
 
 

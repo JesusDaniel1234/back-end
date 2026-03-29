@@ -8,5 +8,9 @@ class PatientData(models.Model):
     age_in_month = models.PositiveIntegerField()
     tutor_name = models.CharField(max_length=100)
 
+    class Meta:
+        verbose_name = "Paciente"
+        verbose_name_plural = "Pacientes"
+
     def __str__(self):
         return self.patient_name + " " + self.CI

@@ -5,7 +5,7 @@ from .models import TipoRiesgo, RangoRiesgo, ValorRiesgo
 
 @receiver(post_migrate)
 def insert_initial_data(sender, **kwargs):
-    if sender.name == "base":
+    if sender.name == "apps.base":
         if not TipoRiesgo.objects.exists():
             tipos_riesgo = [
                 "Temporal en un Día",

@@ -1,14 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-class ClaveConjunto(models.Model):
-    llave = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.llave
-
-
 class TipoRiesgo(models.Model):
     nombre = models.CharField(max_length=200)
 

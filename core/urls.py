@@ -16,7 +16,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="EvaluaTEA API",
         default_version='v2',
-        description="Endpoints ",
+        description="Documentación de los endpoints en EvaluaTEA API",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="jesusdanielsanchezalarcon79@gmail.com"),
         license=openapi.License(name="BSD License"),
@@ -25,7 +25,7 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
-api_version = "api/v1/"
+api_version = "api/v2/"
 
 urlpatterns = [
     # Admin
@@ -37,13 +37,13 @@ urlpatterns = [
     # Base Configuration (Token and base app)
     path(f"{api_version}token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path(f"{api_version}token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path(f"{api_version}", include("base.urls", namespace="api")),
+    path(f"{api_version}base/", include("apps.base.urls", namespace="api")),
     # Tests
     path(f"{api_version}qchat/", include("apps.qchat.urls", namespace="qchat")),
-    path(f"{api_version}qchat10/", include("qchat10.urls", namespace="qchat10")),
+    path(f"{api_version}qchat10/", include("apps.qchat10.urls", namespace="qchat10")),
     path(f"{api_version}mchatr/", include("apps.mchatr.urls", namespace="mchatr")),
     # Users
-    path(f"{api_version}", include("apps.user.urls", namespace="usuarios")),
+    path(f"{api_version}user/", include("apps.user.urls", namespace="usuarios")),
     path(f"{api_version}patient/", include("apps.patient.urls", namespace="patient")),
 ]
 

@@ -1,19 +1,19 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from .models import QchatQuestion, QchatResponses
-from .serializers import QChatResponseSerializers, QChatQuestionSerializers
+from .models import Qchat10Question, Qchat10Responses
+from .serializers import QChat10ResponseSerializers, QChat10QuestionSerializers
 
 
 # Create your views here.
-class QChatQuestionViewSet(ModelViewSet):
-    queryset = QchatQuestion.objects.all()
-    serializer_class = QChatQuestionSerializers
+class QChat10QuestionViewSet(ModelViewSet):
+    queryset = Qchat10Question.objects.all()
+    serializer_class = QChat10QuestionSerializers
 
 
-class QChatResponseViewSet(ModelViewSet):
-    queryset = QchatResponses.objects.all()
-    serializer_class = QChatResponseSerializers
+class QChat10ResponseViewSet(ModelViewSet):
+    queryset = Qchat10Responses.objects.all()
+    serializer_class = QChat10ResponseSerializers
 
     def create(self, request, *args, **kwargs):
         serializers = self.get_serializer(data=request.data)

@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,24 +24,22 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = "django-insecure-m)jx6lhy_0tucb&_^1+_t4r%(r!(xwlr)p1gv4!+bbvzrhg_q%"
-SECRET_KEY = os.environ.get("SECRET_KEY", default="django-insecure-m)jx6lhy_0tucb&_^1+_t4r%(r!(xwlr)p1gv4!+bbvzrhg_q%")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DEBUG', True))
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 LOCAL_APPS = [
-    "base",
-
+    "apps.base",
     "apps.mchatr",
     "apps.user",
     "apps.patient",
-
     "apps.qchat",
-    "qchat10",
+    "apps.qchat10",
 ]
 
 THIRD_PARTY_APPS = [
@@ -124,6 +121,7 @@ AUTH_USER_MODEL = 'user.UserProfile'
 #         "PORT": "5432",
 #     }
 # }
+
 # SQLite
 DATABASES = {
     "default": {
@@ -141,18 +139,6 @@ DATABASES = {
 #         'PASSWORD': 'JESUS.daniel1234',
 #         'HOST': 'localhost',
 #         'PORT': '5432',       
-#     }
-# }
-
-# # MySQL
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'evaluatea', 
-#         'USER': 'root',       
-#         'PASSWORD': '',      
-#         'HOST': '127.0.0.1', 
-#         'PORT': '3306',       
 #     }
 # }
 
@@ -177,7 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "es-es"
 
 TIME_ZONE = "UTC"
 

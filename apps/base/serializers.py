@@ -1,17 +1,10 @@
 from rest_framework import serializers
 from .models import (
-    ClaveConjunto,
-    # Q-chat-100,
     TipoRiesgo,
     ValorRiesgo,
     RangoRiesgo,
 )
 
-
-class ClaveSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ClaveConjunto
-        fields = "__all__"
 
 
 class TipoRiesgoSerializers(serializers.ModelSerializer):

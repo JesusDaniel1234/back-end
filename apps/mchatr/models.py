@@ -15,6 +15,10 @@ class MchatRQuestions(models.Model):
 
     response = models.CharField("Respuesta", max_length=2, choices=RISK_VALUES)
 
+    class Meta:
+        verbose_name = "Pregunta M-Chat-R"
+        verbose_name_plural = "Preguntas M-Chat-R"
+
     def __str__(self):
         return self.content[:50]
 
@@ -33,6 +37,10 @@ class MChatRResponses(models.Model):
     @property
     def valoration(self):
         return "BR" if self.puntuation <= 3 else "MR" if self.puntuation <= 7 else "AR"
+
+    class Meta:
+        verbose_name = "Respuesta M-Chat-R"
+        verbose_name_plural = "Respuestas M-Chat-R"
 
     def __str__(self):
         return self.patient.name
