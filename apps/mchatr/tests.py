@@ -12,7 +12,7 @@ class TestMchatRQuestions(TestSetUp):
             content="Nueva pregunta",
             response="NO",
             created_by=self.user,
-            is_activa=True
+            is_active=True
         )
 
     def test_list_questions_by_url(self):
@@ -21,7 +21,7 @@ class TestMchatRQuestions(TestSetUp):
         self.assertEqual(len(response.data), 20)
 
     def test_create_question_by_url(self):
-        data = { "content": "nueva preguta", "response": "NO", "created_by": self.user.id, "is_activa": True }
+        data = { "content": "nueva preguta", "response": "NO", "created_by": self.user.id, "is_active": True }
 
         response = self.client.post(self.URL, data, frmat="json")
         self.assertEqual(response.status_code, 201)
@@ -33,7 +33,7 @@ class TestMchatRQuestions(TestSetUp):
         created = self._question()
 
         # Actualizar pregunta
-        update_data = { "is_activa": False, "content": "pregunta actualizada", "response": "SI" }
+        update_data = { "is_active": False, "content": "pregunta actualizada", "response": "SI" }
         response = self.client.patch(f"{self.URL}{created.id}/", update_data, frmat="json")
 
         self.assertEqual(response.status_code, 200)
