@@ -1,5 +1,7 @@
 from .models import Qchat10Responses, Qchat10Question
 from rest_framework import serializers
+
+from ..base.models import ValorRiesgo, TipoRiesgo
 from ..patient.models import PatientData
 
 
@@ -64,17 +66,21 @@ class QChat10ResponseSerializers(serializers.ModelSerializer):
         puntuation = 0
         for response in responses:
 
-            question = Qchat10Question.objects.filter(id=response["id"])
+            question = Qchat10Question.objects.get(id=response["id"])
 
-            is_less_risk = question.rango_riesgo.rango.startswith("Menos")
+            is_less_risk = question.risk_range.rango.startswith("Menos")
+
+            risk_type = TipoRiesgo.objects.get(nombre=response["risk_type"])
+
+            risk_value = ValorRiesgo.objects.get(valor=response["risk_value"], tipo_riesgo=risk_type)
 
             is_value_in_risk_range = (
 
-                question.valor_riesgo.orden >= int(response["risk_value"])
+                question.risk_value.orden >= int(risk_value.orden)
 
                 if is_less_risk
 
-                else question.valor_riesgo.orden <= int(response["risk_value"])
+                else question.risk_value.orden <= int(risk_value.orden)
 
             )
 

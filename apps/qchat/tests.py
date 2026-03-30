@@ -5,8 +5,8 @@ from tests.test_setup import TestSetUp
 
 
 # Create your tests here.
-class TestMchatRQuestions(TestSetUp):
-    URL = "http://localhost:8000/api/v1/qchat/qchat_questions/"
+class TestQchatQuestions(TestSetUp):
+    URL = "http://localhost:8000/api/v2/qchat/qchat_questions/"
 
     def _question(self):
         risk_type = TipoRiesgo.objects.get(nombre="Frecuencia")
@@ -79,8 +79,8 @@ class TestMchatRQuestions(TestSetUp):
         self.assertEqual(response.status_code, 204)
 
 
-class TestMChatRResponses(TestSetUp):
-    URL = "http://localhost:8000/api/v1/qchat/qchat_responses/"
+class TestQChatResponses(TestSetUp):
+    URL = "http://localhost:8000/api/v2/qchat/qchat_responses/"
 
     def _patient(self):
         return PatientData.objects.create(

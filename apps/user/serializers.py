@@ -5,11 +5,14 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 class UserSerializers(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True, required=False)
+
     created_date = serializers.DateField(read_only=True)
+
     updated_date = serializers.DateField(read_only=True)
 
     class Meta:
         model = UserProfile
+
         fields = ["id", "username", "first_name", "last_name", "email", "password", "image", "created_date",
                   "updated_date"]
 

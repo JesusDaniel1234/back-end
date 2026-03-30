@@ -5,7 +5,7 @@ from tests.test_setup import TestSetUp
 
 # Create your tests here.
 class TestMchatRQuestions(TestSetUp):
-    URL = "http://localhost:8000/api/v1/mchatr/mchat_questions/"
+    URL = "http://localhost:8000/api/v2/mchatr/mchat_questions/"
 
     def _question(self):
         return MchatRQuestions.objects.create(
@@ -50,7 +50,7 @@ class TestMchatRQuestions(TestSetUp):
 
 
 class TestMChatRResponses(TestSetUp):
-    URL = "http://localhost:8000/api/v1/mchatr/mchat_responses/"
+    URL = "http://localhost:8000/api/v2/mchatr/mchat_responses/"
 
     def _patient(self):
         return PatientData.objects.create(

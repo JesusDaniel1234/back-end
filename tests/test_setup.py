@@ -4,7 +4,7 @@ class TestSetUp(APITestCase):
     def setUp(self):
         from apps.user.models import UserProfile
 
-        self.login_url = "/api/v1/token/"
+        self.login_url = "/api/v2/token/"
         self.user = UserProfile.objects.create_superuser(
             username="superuser",
             email="superuser@admin.com",
