@@ -41,13 +41,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        perfil = UserProfile.objects.get(usuario=user)
-        # Add custom claims
         token["username"] = user.username
+
         token["email"] = user.email
-        token["id_perfil"] = perfil.id
-        token["id_usuario"] = user.id
-        # ...
+
+        token["uid"] = user.id
 
         return token
 
@@ -140,6 +138,6 @@ class ListaResultadosGeneralesPorPaciente(APIView):
         return Response(resultado, status=status.HTTP_200_OK)
 
 
-class ServidorActivoView(APIView):
+class ActiveServerView(APIView):
     def get(self, request):
         return Response({ "message": "OK" }, status=status.HTTP_200_OK)

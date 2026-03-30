@@ -43,6 +43,8 @@ class BaseResponse(models.Model):
         return self.patient.name
 
 
+# TODO: ARREGLAR LOS NOMBRES DE ESTA APP
+
 class TipoRiesgo(models.Model):
     nombre = models.CharField(max_length=200)
 

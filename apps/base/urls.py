@@ -5,14 +5,14 @@ from .views import (
     ListarTipoRiesgoView,
     ListarValorRiesgoView,
     ListaResultadosGeneralesPorPaciente,
-    ServidorActivoView
+    ActiveServerView
 )
 
 app_name = "api"
 
 # Rutas de la aplicación
 urlpatterns = [
-    path("api_run/",ServidorActivoView.as_view()),
+    path("ok/",ActiveServerView.as_view()),
     path("listar_valor_riesgo/", ListarValorRiesgoView.as_view()),
     path("listar_rango_riesgo/", ListarRangoRiesgoView.as_view()),
     path("listar_tipo_riego/", ListarTipoRiesgoView.as_view()),

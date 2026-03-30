@@ -1,0 +1,31 @@
+# Python virtual environments
+.venv
+env
+
+# Byte-code files
+__pycache__
+*.pyc
+
+# Django specific files
+*.sqlite3  # Exclude the SQLite database file if it's not needed in the image
+
+# Version control
+.git
+.gitignore
+
+# IDE and OS-specific files
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Dependencies and logs
+node_modules
+npm-debug.log
+pip-log.txt
+staticfiles  # If collected during the build process and served separately (e.g., via Nginx)
+
+# Docker files themselves
+Dockerfile*
+docker-compose*
+.dockerignore
