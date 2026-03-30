@@ -8,5 +8,7 @@ from .models import (
 
 # Register your models here.
 admin.site.register(TipoRiesgo)
+
 admin.site.register(ValorRiesgo)
+
 admin.site.register(RangoRiesgo)

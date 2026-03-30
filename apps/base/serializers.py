@@ -6,10 +6,10 @@ from .models import (
 )
 
 
-
 class TipoRiesgoSerializers(serializers.ModelSerializer):
     class Meta:
         model = TipoRiesgo
+
         fields = "__all__"
 
 
@@ -18,6 +18,7 @@ class ValorRiesgoSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = ValorRiesgo
+
         fields = "__all__"
 
 
@@ -26,4 +27,5 @@ class RangoRiesgoSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = RangoRiesgo
+
         fields = "__all__"

@@ -7,7 +7,9 @@ from django.dispatch import receiver
 @receiver(post_migrate)
 def create_questions_qchat(sender, **kwargs):
     if sender.name == "apps.qchat":
+
         if not QchatQuestion.objects.exists():
+
             questions = [
                 {
                     "content": "¿Su hijo lo mira a usted cuando lo llama por su nombre?",
@@ -135,9 +137,12 @@ def create_questions_qchat(sender, **kwargs):
                     "risk_range": "Menos Frecuente en un Periodo",
                 },
             ]
+
             for q in questions:
                 risk_type = TipoRiesgo.objects.get(nombre=q["risk_type"])
+
                 risk_range = RangoRiesgo.objects.get(rango=q["risk_range"], tipo_riesgo=risk_type)
+
                 QchatQuestion.objects.create(
                     content=q["content"],
                     risk_type=risk_type,
@@ -145,4 +150,3 @@ def create_questions_qchat(sender, **kwargs):
                 )
 
             print("Preguntas de Q-Chat creado correctamente.")
-

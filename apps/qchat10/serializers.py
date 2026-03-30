@@ -1,27 +1,34 @@
 from .models import Qchat10Responses, Qchat10Question
 from rest_framework import serializers
-from apps.base.models import TipoRiesgo, ValorRiesgo
 from ..patient.models import PatientData
 
 
 class QChat10QuestionSerializers(serializers.ModelSerializer):
     class Meta:
         model = Qchat10Question
+
         fields = "__all__"
 
 
 class QChat10ResponseSerializers(serializers.ModelSerializer):
     patient_name = serializers.CharField()
+
     CI = serializers.CharField()
+
     age_in_month = serializers.IntegerField()
+
     tutor_name = serializers.CharField()
 
     class Meta:
+
         model = Qchat10Responses
+
         fields = "__all__"
+
         read_only_fields = ["puntuation"]
 
     def to_representation(self, instance: Qchat10Responses):
+
         return {
             "id": instance.pk,
             "puntuation": instance.puntuation,
@@ -36,35 +43,54 @@ class QChat10ResponseSerializers(serializers.ModelSerializer):
         }
 
     def validate_responses(self, value):
+
         active_question = Qchat10Question.objects.filter(is_active=True).count()
+
         if active_question != len(value):
             raise serializers.ValidationError(
                 f"La cantidad de respuestas no coincide con la cantidad de preguntas activas")
 
         for response in value:
+
             question = Qchat10Question.objects.get(id=response["id"])
+
             if response["content"] != question.content:
                 raise serializers.ValidationError("Las preguntas no coinciden")
 
         return value
 
-    # TODO: VALIDAR ESTO
     def _calculate_points(self, responses):
         # Cada respuesta tiene un valor especifico y el riesgo se determina con la sumatoria de dicho riesgo
         puntuation = 0
         for response in responses:
-            question = Qchat10Question.objects.filter(id=response["id"])
-            risk_type = TipoRiesgo.objects.get(nombre=response["risk_type"])
-            risk_value = ValorRiesgo.objects.get(valor=response["risk_value"], tipo_riesgo=risk_type)
-            puntuation += risk_value.orden
 
-        return 0
+            question = Qchat10Question.objects.filter(id=response["id"])
+
+            is_less_risk = question.rango_riesgo.rango.startswith("Menos")
+
+            is_value_in_risk_range = (
+
+                question.valor_riesgo.orden >= int(response["risk_value"])
+
+                if is_less_risk
+
+                else question.valor_riesgo.orden <= int(response["risk_value"])
+
+            )
+
+            if is_value_in_risk_range:
+                puntuation += 1
+
+        return puntuation
 
     def create(self, validated_data):
         # Datos del paciente
         patient_name = validated_data.pop("patient_name")
+
         CI = validated_data.pop("CI")
+
         age_in_month = validated_data.pop("age_in_month")
+
         tutor_name = validated_data.pop("tutor_name")
 
         # Respuestas

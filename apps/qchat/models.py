@@ -1,27 +1,17 @@
 from django.db import models
-from apps.base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo
+from apps.base.models import TipoRiesgo, ValorRiesgo, RangoRiesgo, BaseQuestion, BaseResponse
 from apps.patient.models import PatientData
 from apps.user.models import UserProfile
 
 
 # Create your models here.
-class QchatQuestion(models.Model):
-    # Datos comunes
-    content = models.TextField(max_length=500)
-    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    updated = models.DateTimeField(auto_now=True)
-
+class QchatQuestion(BaseQuestion):
     risk_type = models.ForeignKey(TipoRiesgo, on_delete=models.CASCADE)
     risk_range = models.ForeignKey(RangoRiesgo, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Pregunta Q-Chat"
         verbose_name_plural = "Preguntas Q-Chat"
-
-    def __str__(self) -> str:
-        return self.content[:50]
 
     @property
     def risk_values(self):
@@ -29,16 +19,7 @@ class QchatQuestion(models.Model):
         return values
 
 
-class QchatResponses(models.Model):
-    puntuation = models.PositiveIntegerField("Puntuación")
-    responses = models.JSONField("Respuestas")
-    patient = models.ForeignKey(
-        PatientData,
-        on_delete=models.CASCADE,
-        verbose_name="Datos del paciente",
-        default=1,
-    )
-    created = models.DateTimeField(auto_now_add=True)
+class QchatResponses(BaseResponse):
 
     @property
     def valoration(self):
@@ -47,6 +28,3 @@ class QchatResponses(models.Model):
     class Meta:
         verbose_name = "Respuesta Q-Chat"
         verbose_name_plural = "Respuestas Q-Chat"
-
-    def __str__(self):
-        return self.patient.name
