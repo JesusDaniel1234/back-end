@@ -106,7 +106,7 @@ class TestQChatResponses(TestSetUp):
 
             risk_value = ValorRiesgo.objects.get(orden=0, tipo_riesgo=risk_type)
 
-            i["risk_value"] = risk_value.valor
+            i["response"] = risk_value.valor
 
         return data
 
@@ -118,7 +118,7 @@ class TestQChatResponses(TestSetUp):
 
             risk_value = ValorRiesgo.objects.get(orden=4, tipo_riesgo=risk_type)
 
-            i["risk_value"] = risk_value.valor
+            i["response"] = risk_value.valor
 
         return data
 

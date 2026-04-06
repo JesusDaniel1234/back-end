@@ -1,10 +1,18 @@
 from rest_framework import serializers
 from apps.base.models import TipoRiesgo, ValorRiesgo
 from .models import QchatQuestion, QchatResponses
+from ..base.serializers import ValorRiesgoSerializers
 from ..patient.models import PatientData
 
 
 class QChatQuestionSerializers(serializers.ModelSerializer):
+    risk_values = serializers.SerializerMethodField()
+
+    def get_risk_values(self, obj):
+        queryset = obj.risk_values
+        values = ValorRiesgoSerializers(queryset, many=True).data
+        return [item["valor"] for item in values]
+
     class Meta:
         model = QchatQuestion
 
@@ -66,9 +74,10 @@ class QChatResponseSerializers(serializers.ModelSerializer):
         puntuation = 0
 
         for response in responses:
-            risk_type = TipoRiesgo.objects.get(nombre=response["risk_type"])
+            question = QchatQuestion.objects.get(id=response["id"])
+            risk_type = TipoRiesgo.objects.get(nombre=question.risk_type)
 
-            risk_value = ValorRiesgo.objects.get(valor=response["risk_value"], tipo_riesgo=risk_type)
+            risk_value = ValorRiesgo.objects.get(valor=response["response"], tipo_riesgo=risk_type)
 
             puntuation += risk_value.orden
 

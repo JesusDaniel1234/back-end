@@ -40,7 +40,7 @@ class BaseResponse(models.Model):
         abstract = True
 
     def __str__(self):
-        return self.patient.name
+        return self.patient.patient_name
 
 
 # TODO: ARREGLAR LOS NOMBRES DE ESTA APP

@@ -2,10 +2,18 @@ from .models import Qchat10Responses, Qchat10Question
 from rest_framework import serializers
 
 from ..base.models import ValorRiesgo, TipoRiesgo
+from ..base.serializers import ValorRiesgoSerializers
 from ..patient.models import PatientData
 
 
 class QChat10QuestionSerializers(serializers.ModelSerializer):
+    risk_values = serializers.SerializerMethodField()
+
+    def get_risk_values(self, obj):
+        queryset = obj.risk_values
+        values = ValorRiesgoSerializers(queryset, many=True).data
+        return [item["valor"] for item in values]
+
     class Meta:
         model = Qchat10Question
 
@@ -70,9 +78,9 @@ class QChat10ResponseSerializers(serializers.ModelSerializer):
 
             is_less_risk = question.risk_range.rango.startswith("Menos")
 
-            risk_type = TipoRiesgo.objects.get(nombre=response["risk_type"])
+            risk_type = TipoRiesgo.objects.get(nombre=question.risk_type)
 
-            risk_value = ValorRiesgo.objects.get(valor=response["risk_value"], tipo_riesgo=risk_type)
+            risk_value = ValorRiesgo.objects.get(valor=response["response"], tipo_riesgo=risk_type)
 
             is_value_in_risk_range = (
 

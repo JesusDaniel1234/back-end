@@ -120,7 +120,7 @@ class TestMChatRResponses(TestSetUp):
 
             risk_value = ValorRiesgo.objects.get(orden=4 if is_less_risk else 0, tipo_riesgo=risk_type)
 
-            i["risk_value"] = risk_value.valor
+            i["response"] = risk_value.valor
 
         return data
 
@@ -136,7 +136,7 @@ class TestMChatRResponses(TestSetUp):
 
             risk_value = ValorRiesgo.objects.get(orden=0 if is_less_risk else 4, tipo_riesgo=risk_type)
 
-            i["risk_value"] = risk_value.valor
+            i["response"] = risk_value.valor
 
         return data
 

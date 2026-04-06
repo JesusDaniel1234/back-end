@@ -1,6 +1,8 @@
+from rest_framework.decorators import action
 from rest_framework.generics import (
     ListAPIView,
 )
+from rest_framework.viewsets import ViewSet
 from rest_framework.views import APIView
 from .models import (
     # Q-chat-100
@@ -23,6 +25,56 @@ from rest_framework import status
 # Token
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from ..mchatr.models import MchatRQuestions, MChatRResponses
+from ..mchatr.serializers import MchatRQuestionsSerializers, MChatRResponsesSerializers
+from ..qchat.models import QchatQuestion, QchatResponses
+from ..qchat.serializers import QChatQuestionSerializers, QChatResponseSerializers
+from ..qchat10.models import Qchat10Question, Qchat10Responses
+from ..qchat10.serializers import QChat10QuestionSerializers, QChat10ResponseSerializers
+
+
+class DispatchTestsViewSet(ViewSet):
+    TEST_MAP = {
+        "MCHATR": (MchatRQuestions, MchatRQuestionsSerializers),
+        "QCHAT": (QchatQuestion, QChatQuestionSerializers),
+        "QCHAT10": (Qchat10Question, QChat10QuestionSerializers),
+    }
+
+    RESPONSE_MAP = {
+        "MCHATR": (MChatRResponses, MChatRResponsesSerializers),
+        "QCHAT": (QchatResponses, QChatResponseSerializers),
+        "QCHAT10": (Qchat10Responses, QChat10ResponseSerializers),
+    }
+
+    @action(methods=["get"], detail=False)
+    def dispatch_questions(self, request):
+        test = request.query_params.get("test")
+
+        if test not in self.TEST_MAP:
+            return Response({ "error": f"Prueba {test} no encontrada" }, status=status.HTTP_404_NOT_FOUND)
+
+        model, serializer_class = self.TEST_MAP[test]
+        queryset = model.objects.filter(is_active=True)
+        serializer = serializer_class(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["post"], detail=False)
+    def dispatch_response(self, request, *args, **kwargs):
+        test = request.query_params.get("test")
+
+        print(request.data, test)
+        if test not in self.RESPONSE_MAP:
+            return Response({ "error": f"Prueba {test} no encontrada" }, status=status.HTTP_404_NOT_FOUND)
+
+        model, serializer_class = self.RESPONSE_MAP[test]
+        serializser = serializer_class(data=request.data)
+        if serializser.is_valid():
+            serializser.save()
+            return Response({ "message": "Respuesta almacenada correctamente" }, status=status.HTTP_200_OK)
+
+        print(serializser.errors)
+        return Response(serializser.errors, status=status.HTTP_404_NOT_FOUND)
 
 
 def valordefinidoPorPuntuacion(test, puntuacion):
