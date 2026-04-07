@@ -41,7 +41,7 @@ class UsersViewSet(ModelViewSet):
         return Response({ "message": "Usuario creado correctamente", "user": serializers.data },
                         status=status.HTTP_201_CREATED)
 
-    @action(methods=["post"], detail="false")
+    @action(methods=["post"], detail=False)
     def logout(self, request):
         try:
 

@@ -30,6 +30,7 @@ class BaseResponse(models.Model):
         PatientData,
         on_delete=models.CASCADE,
         verbose_name="Datos del paciente",
+        related_name="%(class)s_responses",
         default=1,
     )
     created = models.DateTimeField("Creada", auto_now_add=True)
