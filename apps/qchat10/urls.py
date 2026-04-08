@@ -1,7 +1,7 @@
 from .views import QChat10QuestionViewSet, QChat10ResponseViewSet
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
-routes = DefaultRouter()
+routes = SimpleRouter()
 
 routes.register("qchat10_questions", QChat10QuestionViewSet)
 

@@ -1,7 +1,7 @@
 from .views import UsersViewSet
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
-route = DefaultRouter()
+route = SimpleRouter()
 
 route.register("", UsersViewSet, basename="user")
 

@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import QChatQuestionViewSet, QChatResponseViewSet
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
-route = DefaultRouter()
+route = SimpleRouter()
 
 route.register("qchat_questions", QChatQuestionViewSet)
 

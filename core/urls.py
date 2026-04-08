@@ -39,9 +39,9 @@ urlpatterns = [
     path(f"{api_version}token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path(f"{api_version}base/", include("apps.base.urls", namespace="api")),
     # Tests
-    path(f"{api_version}qchat/", include("apps.qchat.urls", namespace="qchat")),
-    path(f"{api_version}qchat10/", include("apps.qchat10.urls", namespace="qchat10")),
-    path(f"{api_version}mchatr/", include("apps.mchatr.urls", namespace="mchatr")),
+    path(f"{api_version}qchat/", include("apps.qchat.urls")),
+    path(f"{api_version}qchat10/", include("apps.qchat10.urls")),
+    path(f"{api_version}mchatr/", include("apps.mchatr.urls")),
     # Users
     path(f"{api_version}user/", include("apps.user.urls", namespace="usuarios")),
     path(f"{api_version}patient/", include("apps.patient.urls", namespace="patient")),

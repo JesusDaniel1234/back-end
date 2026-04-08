@@ -1,5 +1,5 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from .views import (
     MyTokenObtainPairView,
@@ -10,7 +10,7 @@ from .views import (
     ActiveServerView, DispatchTestsViewSet
 )
 
-router = DefaultRouter()
+router = SimpleRouter()
 router.register("dispatch", DispatchTestsViewSet, "dispatch")
 
 app_name = "api"

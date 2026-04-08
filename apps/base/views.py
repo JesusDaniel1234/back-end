@@ -1,6 +1,6 @@
 from rest_framework.decorators import action
 from rest_framework.generics import (
-    ListAPIView,
+    ListAPIView, get_object_or_404,
 )
 from rest_framework.viewsets import ViewSet
 from rest_framework.views import APIView
@@ -59,22 +59,31 @@ class DispatchTestsViewSet(ViewSet):
         serializer = serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(methods=["post"], detail=False)
+    @action(methods=["post", "get"], detail=False)
     def dispatch_response(self, request, *args, **kwargs):
         test = request.query_params.get("test")
 
-        print(request.data, test)
         if test not in self.RESPONSE_MAP:
             return Response({ "error": f"Prueba {test} no encontrada" }, status=status.HTTP_404_NOT_FOUND)
 
         model, serializer_class = self.RESPONSE_MAP[test]
-        serializser = serializer_class(data=request.data)
-        if serializser.is_valid():
-            serializser.save()
-            return Response({ "message": "Respuesta almacenada correctamente" }, status=status.HTTP_200_OK)
 
-        print(serializser.errors)
-        return Response(serializser.errors, status=status.HTTP_404_NOT_FOUND)
+        if request.method == "POST":
+            serializer = serializer_class(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({ "message": "Respuesta almacenada correctamente" }, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == "GET":
+            id = request.query_params.get("id")
+            print(id)
+            if not id:
+                return Response({ "error": f"Falta el id de la respuesta" }, status=status.HTTP_400_BAD_REQUEST)
+
+            instance = get_object_or_404(model, id=id)
+            serializer = serializer_class(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def valordefinidoPorPuntuacion(test, puntuacion):
