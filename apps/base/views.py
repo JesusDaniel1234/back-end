@@ -18,7 +18,7 @@ from .serializers import (
     RangoRiesgoSerializers,
 )
 from apps.patient.models import PatientData
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -34,6 +34,27 @@ from ..qchat10.models import Qchat10Question, Qchat10Responses
 from ..qchat10.serializers import QChat10QuestionSerializers, QChat10ResponseSerializers
 
 
+# Token configuration
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token["username"] = user.username
+        token["first_name"] = user.first_name
+        token["last_name"] = user.last_name
+        token["email"] = user.email
+        token["is_staff"] = user.is_staff
+        token["is_superuser"] = user.is_superuser
+
+        return token
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+# Despachador de Pruebas
 class DispatchTestsViewSet(ViewSet):
     TEST_MAP = {
         "MCHATR": (MchatRQuestions, MchatRQuestionsSerializers),
@@ -85,34 +106,40 @@ class DispatchTestsViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def valordefinidoPorPuntuacion(test, puntuacion):
-    print(test, puntuacion)
-    valorPorPuntuacion = {
-        "mchatr": "AR" if puntuacion > 7 else "MR" if puntuacion > 2 else "BR" if puntuacion > 1 else "NR",
-        "qchat": "AR" if puntuacion > 51.8 else "MR" if puntuacion > 26.7 else "BR" if puntuacion > 1 else "NR",
-        "qchat10": "AR" if puntuacion > 3 else "BR" if puntuacion > 1 else "NR",
-    }
+class StatsViewSet(ViewSet):
+    @action(methods=["get"], detail=False)
+    def mchatr_responses_stats(self):
+        queryset = MChatRResponses.objects.all()
 
-    return valorPorPuntuacion[test]
+        # cantidad
+        total = queryset.cout()
+        # Media
+        avg_score = queryset.aggregate(avg=Avg("puntuation"))["avg"]
+
+        low = queryset.filter(puntuation__lte=2).count()
+        moderate = queryset.filter(puntuation__gte=3, puntuation__lte=7).count()
+        high = queryset.filter(puntuation__gte=8).count()
+
+        return Response({
+            "total": total,
+            "avg_score": avg_score,
+            "distribution": {
+                "low": low,
+                "moderate": moderate,
+                "high": high
+            },
+            "percentages": {
+                "low": low / total * 100 if total else 0,
+                "moderate": moderate / total * 100 if total else 0,
+                "high": high / total * 100 if total else 0,
+            }
+        }, status=status.HTTP_200_OK)
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        token["username"] = user.username
-        token["first_name"] = user.first_name
-        token["last_name"] = user.last_name
-        token["email"] = user.email
-        token["is_staff"] = user.is_staff
-        token["is_superuser"] = user.is_superuser
-
-        return token
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+# El servidor funciona
+class ActiveServerView(APIView):
+    def get(self, request):
+        return Response({ "message": "OK" }, status=status.HTTP_200_OK)
 
 
 # base
@@ -129,76 +156,3 @@ class ListarRangoRiesgoView(ListAPIView):
 class ListarValorRiesgoView(ListAPIView):
     queryset = ValorRiesgo.objects.all()
     serializer_class = ValorRiesgoSerializers
-
-
-def calcularValorRiesgo(mchatr: str, qchat: str, qchat10: str):
-    resultados = [mchatr, qchat, qchat10]
-
-    if "AR" in resultados:
-        return "AR"
-    elif "MR" in resultados:
-        return "MR"
-    elif all(r == "BR" for r in resultados):
-        return "BR"
-
-
-def calcularRiesgo(paciente):
-    # Usar agregaciones para calcular suma y conteo en una sola consulta
-    qchat10_agg = paciente.respuestasqchat10_set.aggregate(
-        suma=Sum('puntuacion'), count=Count('puntuacion')
-    )
-    qchat_agg = paciente.respuestasqchat_set.aggregate(
-        suma=Sum('puntuacion'), count=Count('puntuacion')
-    )
-    mchatr_agg = paciente.respuestasmchtr_set.aggregate(
-        suma=Sum('puntuacion'), count=Count('puntuacion')
-    )
-
-    # Calcular los promedios manejando casos de listas vacías
-    respuesta_qchat10 = qchat10_agg['suma'] / qchat10_agg['count'] if qchat10_agg['count'] > 0 else 0
-    respuesta_qchat = qchat_agg['suma'] / qchat_agg['count'] if qchat_agg['count'] > 0 else 0
-    respuesta_mchatr = mchatr_agg['suma'] / mchatr_agg['count'] if mchatr_agg['count'] > 0 else 0
-    print("Estras son las respuestas:", respuesta_qchat10, respuesta_qchat, respuesta_mchatr)
-    # Calcular el riesgo
-    lista_resultados = [0 if respuesta_mchatr < 3 else 1, 0 if respuesta_qchat10 < 3 else 1,
-                        0 if respuesta_qchat < 51 else 1]
-    riesgo = int((sum(lista_resultados) / (len(lista_resultados))) * 100)
-
-    valor_qchat10 = valordefinidoPorPuntuacion("qchat10", respuesta_qchat10)
-    valor_qchat = valordefinidoPorPuntuacion("qchat", respuesta_qchat)
-    valor_mchatr = valordefinidoPorPuntuacion("mchatr", respuesta_mchatr)
-
-    riesgo = calcularValorRiesgo(valor_qchat10,
-                                 valor_qchat,
-                                 valor_mchatr)
-
-    return [valor_qchat10, valor_qchat, valor_mchatr, riesgo]
-
-
-class ListaResultadosGeneralesPorPaciente(APIView):
-    def get(self, request):
-        pacientes = PatientData.objects.all()
-        # Crear una lista para almacenar los resultados
-        resultado = []
-
-        # Recorrer cada paciente y obtener las puntuaciones de las pruebas
-        for paciente in pacientes:
-            valor_qchat10, valor_qchat, valor_mchatr, riesgo = calcularRiesgo(paciente)
-            datos_paciente = {
-                'nombre_paciente': paciente.nombre_paciente,
-                "tutor": paciente.nombre_tutor,
-                "edad_meses": paciente.edad_paciente_meses,
-                'respuestas_qchat10': valor_qchat10,
-                'respuestas_qchat': valor_qchat,
-                'respuestas_mchtr': valor_mchatr,
-                "riesgo": riesgo,
-                "id": paciente.id
-            }
-            resultado.append(datos_paciente)
-
-        return Response(resultado, status=status.HTTP_200_OK)
-
-
-class ActiveServerView(APIView):
-    def get(self, request):
-        return Response({ "message": "OK" }, status=status.HTTP_200_OK)
