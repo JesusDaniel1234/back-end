@@ -77,7 +77,6 @@ class DispatchTestsViewSet(ViewSet):
 
         if request.method == "GET":
             id = request.query_params.get("id")
-            print(id)
             if not id:
                 return Response({ "error": f"Falta el id de la respuesta" }, status=status.HTTP_400_BAD_REQUEST)
 
