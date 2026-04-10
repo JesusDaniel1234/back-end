@@ -17,7 +17,7 @@ class MChatRResponses(BaseResponse):
 
     @property
     def valoration(self):
-        return "BR" if self.puntuation <= 3 else "MR" if self.puntuation <= 7 else "AR"
+        return "BR" if self.puntuation < 3 else "MR" if self.puntuation <= 7 else "AR"
 
     class Meta:
         verbose_name = "Respuesta M-Chat-R"

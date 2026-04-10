@@ -108,11 +108,12 @@ class DispatchTestsViewSet(ViewSet):
 
 class StatsViewSet(ViewSet):
     @action(methods=["get"], detail=False)
-    def mchatr_responses_stats(self):
+    def mchatr_responses_stats(self, *args, **kwargs):
+        import numpy as np
         queryset = MChatRResponses.objects.all()
 
         # cantidad
-        total = queryset.cout()
+        total = queryset.count()
         # Media
         avg_score = queryset.aggregate(avg=Avg("puntuation"))["avg"]
 
@@ -120,18 +121,53 @@ class StatsViewSet(ViewSet):
         moderate = queryset.filter(puntuation__gte=3, puntuation__lte=7).count()
         high = queryset.filter(puntuation__gte=8).count()
 
+        puntuations = list(queryset.values_list('puntuation', flat=True))
+        puntuations = list(queryset.values_list('puntuation', flat=True))
+
+        if not puntuations:
+            return Response({
+                "total": 0,
+                "avg_score": 0,
+                "min_score": 0,
+                "max_score": 0,
+                "distribution": {
+                    "low": 0,
+                    "moderate": 0,
+                    "high": 0
+                },
+                "screening_positive_rate": 0,
+                "percentages": {
+                    "low": 0,
+                    "moderate": 0,
+                    "high": 0,
+                },
+                "percentiles": {
+                    "p25": 0,
+                    "p50": 0,
+                    "p75": 0,
+                }
+            }, status=status.HTTP_200_OK)
+
         return Response({
             "total": total,
-            "avg_score": avg_score,
+            "avg_score": avg_score or 0,
+            "min_score": min(puntuations),
+            "max_score": max(puntuations),
             "distribution": {
                 "low": low,
                 "moderate": moderate,
                 "high": high
             },
+            "screening_positive_rate": (moderate + high) / total * 100 if total else 0,
             "percentages": {
                 "low": low / total * 100 if total else 0,
                 "moderate": moderate / total * 100 if total else 0,
                 "high": high / total * 100 if total else 0,
+            },
+            "percentiles": {
+                "p25": np.percentile(puntuations, 25),
+                "p50": np.percentile(puntuations, 50),
+                "p75": np.percentile(puntuations, 75),
             }
         }, status=status.HTTP_200_OK)
 
