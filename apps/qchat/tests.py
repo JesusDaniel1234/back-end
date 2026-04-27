@@ -6,7 +6,8 @@ from tests.test_setup import TestSetUp
 
 # Create your tests here.
 class TestQchatQuestions(TestSetUp):
-    URL = "http://localhost:8000/api/v2/qchat/qchat_questions/"
+    def get_url(self):
+        return self.URLS["qchat_questions"]
 
     def _question(self):
         risk_type = TipoRiesgo.objects.get(nombre="Frecuencia")
@@ -22,7 +23,7 @@ class TestQchatQuestions(TestSetUp):
         )
 
     def test_list_questions_by_url(self):
-        response = self.client.get(self.URL)
+        response = self.client.get(self.get_url())
 
         self.assertEqual(response.status_code, 200)
 
@@ -41,7 +42,7 @@ class TestQchatQuestions(TestSetUp):
             "is_active": True
         }
 
-        response = self.client.post(self.URL, data, frmat="json")
+        response = self.client.post(self.get_url(), data, frmat="json")
 
         self.assertEqual(response.status_code, 201)
         # Ya existen 26 preguntas creadas así que la nueva estará con el id 26
@@ -63,7 +64,7 @@ class TestQchatQuestions(TestSetUp):
             "risk_range": risk_range.id
         }
 
-        response = self.client.patch(f"{self.URL}{created.id}/", update_data, frmat="json")
+        response = self.client.patch(f"{self.get_url()}{created.id}/", update_data, frmat="json")
 
         self.assertEqual(response.status_code, 200)
 
@@ -74,53 +75,14 @@ class TestQchatQuestions(TestSetUp):
         created = self._question()
 
         # Eliminar Pregunta
-        response = self.client.delete(f"{self.URL}{created.id}/")
+        response = self.client.delete(f"{self.get_url()}{created.id}/")
 
         self.assertEqual(response.status_code, 204)
 
 
 class TestQChatResponses(TestSetUp):
-    URL = "http://localhost:8000/api/v2/qchat/qchat_responses/"
-
-    def _patient(self):
-        return PatientData.objects.create(
-            patient_name="paciente de prueba",
-            CI="01062279905",
-            age_in_month=24,
-            tutor_name="tutor de prueba",
-        )
-
-    def _get_data_response(self):
-        from tests.data.qchat_questions import data_response
-
-        import copy
-
-        return copy.deepcopy(data_response)
-
-    def _responses_with_low_risk(self):
-
-        data = self._get_data_response()
-
-        for i in data:
-            risk_type = TipoRiesgo.objects.get(nombre=i["risk_type"])
-
-            risk_value = ValorRiesgo.objects.get(orden=0, tipo_riesgo=risk_type)
-
-            i["response"] = risk_value.valor
-
-        return data
-
-    def _responses_with_high_risk(self):
-        data = self._get_data_response()
-
-        for i in data:
-            risk_type = TipoRiesgo.objects.get(nombre=i["risk_type"])
-
-            risk_value = ValorRiesgo.objects.get(orden=4, tipo_riesgo=risk_type)
-
-            i["response"] = risk_value.valor
-
-        return data
+    def get_url(self):
+        return self.URLS["qchat_response"]
 
     def test_high_risk_case(self):
         """
@@ -136,10 +98,10 @@ class TestQChatResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._responses_with_high_risk()
+            "responses": self._responses_with_high_risk("QCHAT")
         }
 
-        response = self.client.post(self.URL, data, format="json")
+        response = self.client.post(self.get_url(), data, format="json")
 
         self.assertEqual(response.status_code, 201)
 
@@ -160,10 +122,10 @@ class TestQChatResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._responses_with_low_risk()
+            "responses": self._responses_with_low_risk("QCHAT")
         }
 
-        response = self.client.post(self.URL, data, format="json")
+        response = self.client.post(self.get_url(), data, format="json")
 
         self.assertEqual(response.status_code, 201)
 
@@ -180,10 +142,10 @@ class TestQChatResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._responses_with_high_risk()[:10]
+            "responses": self._responses_with_high_risk("QCHAT")[:10]
         }
 
-        response = self.client.post(self.URL, data, format="json")
+        response = self.client.post(self.get_url(), data, format="json")
 
         # Error 400 La cantidad de respuestas no coincide con la cantidad de preguntas activas
         self.assertEqual(response.status_code, 400)

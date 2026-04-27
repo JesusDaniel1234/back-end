@@ -90,55 +90,8 @@ class TestMchatRQuestions(TestSetUp):
 
 
 class TestMChatRResponses(TestSetUp):
-    URL = "http://localhost:8000/api/v2/qchat10/qchat10_responses/"
-
-    def _patient(self):
-        return PatientData.objects.create(
-            patient_name="paciente de prueba",
-            CI="01062279905",
-            age_in_month=24,
-            tutor_name="tutor de prueba",
-        )
-
-    def _get_data_response(self):
-        from tests.data.qchat10_questions import data_response
-
-        import copy
-
-        return copy.deepcopy(data_response)
-
-    def _responses_with_low_risk(self):
-
-        data = self._get_data_response()
-
-        for i in data:
-            question = Qchat10Question.objects.get(id=i["id"])
-
-            is_less_risk = question.risk_range.rango.startswith("Menos")
-
-            risk_type = TipoRiesgo.objects.get(nombre=i["risk_type"])
-
-            risk_value = ValorRiesgo.objects.get(orden=4 if is_less_risk else 0, tipo_riesgo=risk_type)
-
-            i["response"] = risk_value.valor
-
-        return data
-
-    def _responses_with_high_risk(self):
-        data = self._get_data_response()
-
-        for i in data:
-            question = Qchat10Question.objects.get(id=i["id"])
-
-            is_less_risk = question.risk_range.rango.startswith("Menos")
-
-            risk_type = TipoRiesgo.objects.get(nombre=i["risk_type"])
-
-            risk_value = ValorRiesgo.objects.get(orden=0 if is_less_risk else 4, tipo_riesgo=risk_type)
-
-            i["response"] = risk_value.valor
-
-        return data
+    def get_url(self):
+        return self.URLS["qchat10_response"]
 
     def test_high_risk_case(self):
         """
@@ -154,10 +107,10 @@ class TestMChatRResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._responses_with_high_risk()
+            "responses": self._responses_with_high_risk("QCHAT10")
         }
 
-        response = self.client.post(self.URL, data, format="json")
+        response = self.client.post(self.get_url(), data, format="json")
 
         self.assertEqual(response.status_code, 201)
 
@@ -178,10 +131,10 @@ class TestMChatRResponses(TestSetUp):
             "CI": patient.CI,
             "age_in_month": patient.age_in_month,
             "tutor_name": patient.tutor_name,
-            "responses": self._responses_with_low_risk()
+            "responses": self._responses_with_low_risk("QCHAT10")
         }
 
-        response = self.client.post(self.URL, data, format="json")
+        response = self.client.post(self.get_url(), data, format="json")
 
         self.assertEqual(response.status_code, 201)
 
@@ -190,18 +143,17 @@ class TestMChatRResponses(TestSetUp):
         self.assertEqual(response.data["valoration"], "BR")
 
     def test_validate_response_number(self):
-
         patient = self._patient()
 
         data = {
             "patient_name": patient.patient_name,
             "CI": patient.CI,
             "age_in_month": patient.tutor_name,
-            "responses": self._responses_with_high_risk()[:5],
+            "responses": self._responses_with_high_risk("QCHAT10")[:5],
             "tutor_name": patient.tutor_name
         }
 
-        response = self.client.post(self.URL, data, format="json")
+        response = self.client.post(self.get_url(), data, format="json")
 
         # Error 400 La cantidad de respuestas no coincide con la cantidad de preguntas activas
         self.assertEqual(response.status_code, 400)
