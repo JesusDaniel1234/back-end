@@ -105,12 +105,16 @@ class DispatchTestsViewSet(ViewSet):
             serializer = serializer_class(instance)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class StatsViewSet(ViewSet):
     @action(methods=["get"], detail=False)
-    def mchatr_responses_stats(self, *args, **kwargs):
+    def dispatch_stats(self, request, *args, **kwargs):
         import numpy as np
-        queryset = MChatRResponses.objects.all()
+        test = request.query_params.get("test")
+
+        if test not in self.RESPONSE_MAP:
+            return Response({ "error": f"Prueba {test} no encontrada" }, status=status.HTTP_404_NOT_FOUND)
+
+        model, serializer_class = self.RESPONSE_MAP[test]
+        queryset = model.objects.all()
 
         # cantidad
         total = queryset.count()
@@ -121,7 +125,6 @@ class StatsViewSet(ViewSet):
         moderate = queryset.filter(puntuation__gte=3, puntuation__lte=7).count()
         high = queryset.filter(puntuation__gte=8).count()
 
-        puntuations = list(queryset.values_list('puntuation', flat=True))
         puntuations = list(queryset.values_list('puntuation', flat=True))
 
         if not puntuations:
@@ -150,7 +153,7 @@ class StatsViewSet(ViewSet):
 
         return Response({
             "total": total,
-            "avg_score": avg_score or 0,
+            "avg_score": round(avg_score or 0, 1),
             "min_score": min(puntuations),
             "max_score": max(puntuations),
             "distribution": {
@@ -158,11 +161,11 @@ class StatsViewSet(ViewSet):
                 "moderate": moderate,
                 "high": high
             },
-            "screening_positive_rate": (moderate + high) / total * 100 if total else 0,
+            "screening_positive_rate": round((moderate + high) / total * 100, 1) if total else 0,
             "percentages": {
-                "low": low / total * 100 if total else 0,
-                "moderate": moderate / total * 100 if total else 0,
-                "high": high / total * 100 if total else 0,
+                "low": round(low / total * 100 if total else 0, 1),
+                "moderate": round(moderate / total * 100 if total else 0, 1),
+                "high": round(high / total * 100 if total else 0, 1),
             },
             "percentiles": {
                 "p25": np.percentile(puntuations, 25),
@@ -170,7 +173,6 @@ class StatsViewSet(ViewSet):
                 "p75": np.percentile(puntuations, 75),
             }
         }, status=status.HTTP_200_OK)
-
 
 # El servidor funciona
 class ActiveServerView(APIView):

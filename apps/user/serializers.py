@@ -13,8 +13,8 @@ class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
 
-        fields = ["id", "username", "first_name", "last_name", "email", "password", "image", "created_date",
-                  "updated_date"]
+        fields = ["id", "username", "first_name", "last_name", "email", "phone_number", "password", "image",
+                  "created_date", "updated_date"]
 
         extra_kwargs = {
             "username": {
@@ -36,3 +36,10 @@ class UserSerializers(serializers.ModelSerializer):
             "created_date": instance.created_date,
             "updated_date": instance.updated_date
         }
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = UserProfile(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user

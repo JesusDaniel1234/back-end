@@ -6,12 +6,11 @@ from .views import (
     ListarRangoRiesgoView,
     ListarTipoRiesgoView,
     ListarValorRiesgoView,
-    ActiveServerView, StatsViewSet, DispatchTestsViewSet
+    ActiveServerView, DispatchTestsViewSet
 )
 
 router = SimpleRouter()
 router.register("dispatch", DispatchTestsViewSet, "dispatch")
-router.register("stats", StatsViewSet, "stats")
 
 app_name = "api"
 
