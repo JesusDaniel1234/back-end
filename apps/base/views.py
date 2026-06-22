@@ -120,10 +120,18 @@ class DispatchTestsViewSet(ViewSet):
         total = queryset.count()
         # Media
         avg_score = queryset.aggregate(avg=Avg("puntuation"))["avg"]
-
-        low = queryset.filter(puntuation__lte=2).count()
-        moderate = queryset.filter(puntuation__gte=3, puntuation__lte=7).count()
-        high = queryset.filter(puntuation__gte=8).count()
+        if test == "MCHATR":
+            low = queryset.filter(puntuation__lte=2).count()
+            moderate = queryset.filter(puntuation__gte=3, puntuation__lte=7).count()
+            high = queryset.filter(puntuation__gte=8).count()
+        elif test == "QCHAT":
+            low = queryset.filter(puntuation__lte=26.7).count()
+            moderate = queryset.filter(puntuation__gte=26.8, puntuation__lte=51.8).count()
+            high = queryset.filter(puntuation__gte=51.9).count()
+        else:
+            low = queryset.filter(puntuation__lte=3).count()
+            moderate = 0
+            high = queryset.filter(puntuation__gte=4).count()
 
         puntuations = list(queryset.values_list('puntuation', flat=True))
 
@@ -173,6 +181,7 @@ class DispatchTestsViewSet(ViewSet):
                 "p75": np.percentile(puntuations, 75),
             }
         }, status=status.HTTP_200_OK)
+
 
 # El servidor funciona
 class ActiveServerView(APIView):
