@@ -1,3 +1,5 @@
+from tokenize import TokenError
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -74,6 +76,21 @@ class UsersViewSet(ModelViewSet):
 
             return Response({ "message": "Sesión Cerrada Correctamente" }, status=status.HTTP_200_OK)
 
-        except Exception as e:
 
-            return Response({ "message": e }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            if "lista negra" in str(e).lower():
+                return Response(
+
+                    { "message": "La sesión ya había sido cerrada" },
+
+                    status=status.HTTP_200_OK  # Sigue siendo 200, no es un error real
+
+                )
+
+            return Response(
+
+                { "message": "Token inválido", "detail": str(e) },
+
+                status=status.HTTP_400_BAD_REQUEST
+
+            )
