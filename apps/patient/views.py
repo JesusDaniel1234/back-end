@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+
+from .filters import PatientFilter
 from .models import PatientData
 from .serializers import PatientDataSerializers
 from rest_framework import status
@@ -17,6 +19,7 @@ class PatientDataViewSet(ModelViewSet):
     filter_backends = [SearchFilter, DjangoFilterBackend]
     serializer_class = PatientDataSerializers
     pagination_class = MediumPaginationClass
+    filterset_class = PatientFilter
 
     search_fields = [
         "patient_name",
