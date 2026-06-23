@@ -16,7 +16,7 @@ class PatientDataViewSet(ModelViewSet):
     queryset = PatientData.objects.all().order_by("id")
     filter_backends = [SearchFilter, DjangoFilterBackend]
     serializer_class = PatientDataSerializers
-    pagination_class = SmallPaginationClass
+    pagination_class = MediumPaginationClass
 
     search_fields = [
         "patient_name",
