@@ -90,6 +90,17 @@ class DispatchTestsViewSet(ViewSet):
         model, serializer_class = self.RESPONSE_MAP[test]
 
         if request.method == "POST":
+            patient_name = request.data.get("patient_name")
+            patient_ci = request.data.get("CI")
+
+            print(patient_name, patient_ci)
+
+            patient = PatientData.objects.filter(CI=patient_ci).first()
+
+            print(patient)
+
+            model.objects.filter(patient=patient).delete()
+
             serializer = serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
