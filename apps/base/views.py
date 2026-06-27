@@ -32,7 +32,7 @@ from ..qchat.models import QchatQuestion, QchatResponses
 from ..qchat.serializers import QChatQuestionSerializers, QChatResponseSerializers
 from ..qchat10.models import Qchat10Question, Qchat10Responses
 from ..qchat10.serializers import QChat10QuestionSerializers, QChat10ResponseSerializers
-
+from collections import Counter
 
 # Token configuration
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -120,6 +120,41 @@ class DispatchTestsViewSet(ViewSet):
     def dispatch_stats(self, request, *args, **kwargs):
         import numpy as np
         test = request.query_params.get("test")
+
+        if test == "GENERAL":
+            patients = PatientData.objects.all()
+
+            total = patients.count()
+
+            # Contar por valoration
+            counts = Counter(patient.valoration for patient in patients)
+
+            low = counts.get("BR", 0)
+            moderate = counts.get("MR", 0)
+            high = counts.get("AR", 0)
+
+            def safe_percent(value):
+                return round((value / total) * 100, 2) if total > 0 else 0
+
+            return Response({
+                "total": total,
+                "distribution": {
+                    "low": low,
+                    "moderate": moderate,
+                    "high": high
+                },
+                "screening_positive_rate": safe_percent(moderate + high),
+                "percentages": {
+                    "low": safe_percent(low),
+                    "moderate": safe_percent(moderate),
+                    "high": safe_percent(high),
+                },
+                "percentiles": {
+                    "p25": 0,
+                    "p50": 0,
+                    "p75": 0,
+                }
+            }, status=status.HTTP_200_OK)
 
         if test not in self.RESPONSE_MAP:
             return Response({ "error": f"Prueba {test} no encontrada" }, status=status.HTTP_404_NOT_FOUND)

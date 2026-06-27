@@ -41,6 +41,19 @@ class PatientFilter(django_filters.FilterSet):
             },
         }
 
+        if test == "GENERAL":
+            if valoration:
+                # filtra por property valoration del paciente
+                return queryset.filter().distinct().filter(
+                    pk__in=[
+                        p.pk for p in queryset
+                        if p.valoration == valoration
+                    ]
+                )
+
+            # si no hay valoration → todos los pacientes
+            return queryset
+
         # Sin filtros
         if not test and not valoration:
             return queryset
